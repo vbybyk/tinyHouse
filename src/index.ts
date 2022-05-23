@@ -1,31 +1,19 @@
 import express from "express";
-import { listings } from "./listings";
-import bodyParser from "body-parser";
+import { ApolloServer } from "apollo-server-express";
+import { schema } from "./graphql";
  
 const app = express();
 const port = 9000;
 
-app.get('/', (_req, res) => {
-    res.send('hi there common man man!')
-})
+const server = new ApolloServer({schema})
 
-app.get('/listings', (_req, res) => {
-    res.send(listings)   
-})
+const startServer = async() => {
+    await server.start();
+    server.applyMiddleware({app, path: "/api"})
+}
+startServer()
 
-app.use(bodyParser.json())
 
-app.post('/delete-listing', (req, res) => {
-    const id: string = req.body.id
-    console.log(id);
-    for (let i = 0; i < listings.length; i++){
-        console.log(listings[i]);
-        if(listings[i].id === id){
-           return res.send(listings.splice(i, 1))
-        }
-    }
-    return res.send('delete error')
-})
 
 app.listen(port)
 
