@@ -1,9 +1,9 @@
 import { MongoClient } from "mongodb";
 import { Database } from "../lib/types";
 
-const user = "vbybyk";
-const userPassword = "mongovbybyk21";
-const cluster = "cluster0.antv1"
+const user = process.env.DB_USER;
+const userPassword = process.env.DB_USER_PASSWORD;
+const cluster = process.env.DB_CLUSTER
 
 const url = `mongodb+srv://${user}:${userPassword}@${cluster}.mongodb.net/?retryWrites=true&w=majority`
 
