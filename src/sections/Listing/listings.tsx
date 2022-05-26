@@ -42,7 +42,7 @@ export const Listings = ({title} : Props) => {
   //   setListings(data.listings)
   // }
 
-  const {data} = useQuery<ListingsData>(LISTINGS)
+  const {data, refetch} = useQuery<ListingsData>(LISTINGS)
 
   const deleteListings = async (id: string) => {
     await server.fetch<DeleteListingData, DeleteListingVariables>({ 
@@ -50,7 +50,7 @@ export const Listings = ({title} : Props) => {
       variables : {
         id: id}
     })
-  
+  refetch();
   }
 
   const listings = data? data.listings : null
