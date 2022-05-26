@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
-import {server} from '../../lib'
-import {ListingsData, Listing, DeleteListingData, DeleteListingVariables} from './types'
+import {server, useQuery} from '../../lib'
+import {ListingsData, DeleteListingData, DeleteListingVariables} from './types'
 
 interface Props {
     title: string;
@@ -32,16 +31,18 @@ const DELETE_LISTING = `
 
 export const Listings = ({title} : Props) => {
 
-  const [listings, setListings] = useState<Listing[] | null>(null)
+  // const [listings, setListings] = useState<Listing[] | null>(null)
   
-  useEffect(() => {
-    fetchListings();
-  }, [])
+  // useEffect(() => {
+  //   fetchListings();
+  // }, [])
 
-  const fetchListings = async () => {
-    const {data} = await server.fetch<ListingsData>({ query : LISTINGS})
-    setListings(data.listings)
-  }
+  // const fetchListings = async () => {
+  //   const {data} = await server.fetch<ListingsData>({ query : LISTINGS})
+  //   setListings(data.listings)
+  // }
+
+  const {data} = useQuery<ListingsData>(LISTINGS)
 
   const deleteListings = async (id: string) => {
     await server.fetch<DeleteListingData, DeleteListingVariables>({ 
@@ -49,8 +50,10 @@ export const Listings = ({title} : Props) => {
       variables : {
         id: id}
     })
-  fetchListings();
+  
   }
+
+  const listings = data? data.listings : null
 
   const listingsList = listings? listings.map(({title, id}) => 
     {
