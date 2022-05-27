@@ -7,8 +7,16 @@ interface State<TData> {
   error: boolean
 }
 
-export const useQuery = <TData = any>( query : string) => {
-  const [state, setState] = useState<State<TData>>({data: null, loading: true, error: false});
+// это не обязательно указывать 
+interface QueryResult<TData> extends State<TData> {
+  refetch: () => void;
+}
+
+export const useQuery = <TData = any>( query : string): QueryResult<TData> => {
+  const [state, setState] = useState<State<TData>>({
+    data: null, 
+    loading: true, 
+    error: false});
   
   const fetch = useCallback(() => {
     const fetchApi = async () => {
