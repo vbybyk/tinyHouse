@@ -1,14 +1,23 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
 import {Listings} from './sections'; 
+import {ApolloClient, InMemoryCache, ApolloProvider} from "@apollo/client";
 import reportWebVitals from './reportWebVitals';
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
 );
+
+const client = new ApolloClient({
+  uri: '/api',
+  cache: new InMemoryCache()
+})
+
 root.render(
   <React.StrictMode>
-    <Listings title={"The listings of tinyhouse"}/>
+    <ApolloProvider client={client}>
+      <Listings title={"The listings of tinyhouse"}/>
+    </ApolloProvider>
   </React.StrictMode>
 );
 
