@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom/client';
 import {Listings} from './sections'; 
 import {ApolloClient, InMemoryCache, ApolloProvider} from "@apollo/client";
 import reportWebVitals from './reportWebVitals';
+import 'antd/dist/antd.css'
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement
