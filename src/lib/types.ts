@@ -24,6 +24,13 @@ export interface Booking {
   checkIn: string;
   checkOut: string;
 }
+export interface Viewer {
+  _id?: string;
+  token?: string;
+  avatar?: string;
+  walletId?: string;
+  didRequest: boolean;
+}
 
 export interface User {
   _id: string;
