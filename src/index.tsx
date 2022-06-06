@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import ReactDOM from 'react-dom/client';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import {Listings, Home, Host, Listing, User, Login, NotFound} from './sections'; 
+import {AppHeader, Listings, Home, Host, Listing, User, Login, NotFound} from './sections'; 
 import {ApolloClient, InMemoryCache, ApolloProvider} from "@apollo/client";
 import { Viewer } from './lib/types';
-import { Layout } from 'antd';
+import { Layout, Affix } from 'antd';
 import reportWebVitals from './reportWebVitals';
 import './styles/index.css'
 
@@ -31,6 +31,9 @@ const App = () => {
   return(
     <Router>
         <Layout id='app'>
+          <Affix className='app__affix-header' offsetTop={0}>
+            <AppHeader viewer={viewer} setViewer={setViewer}/>
+          </Affix>
           <Routes>
             <Route path="/" element={<Home/>}/>
             <Route path="/host" element={<Host/>}/>
