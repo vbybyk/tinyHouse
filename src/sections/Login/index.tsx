@@ -8,21 +8,23 @@ import { AUTH_URL } from "../../lib/graphql/queries";
 import { LogIn as LogInData, LogInVariables } from "../../lib/graphql/mutations/LogIn/__generated__/LogIn";
 import { AuthUrl as AuthUrlData } from "../../lib/graphql/queries/AuthUrl/__generated__/AuthUrl";
 import { displaySuccessNotification, displayErrorMessage } from "../../lib/utils";
-import googleLogo from './assets/google_logo.jpg'
 import { Viewer } from "../../lib/types";
-
-
-const {Title, Text} = Typography;
-const {Content} = Layout
+import googleLogo from './assets/google_logo.jpg'
 
 interface Props {
   setViewer: (viewer: Viewer) => void;
 }
 
+const {Content} = Layout;
+const {Title, Text} = Typography;
+
+
+
+
 export const Login = ({setViewer}: Props) => {
   const client = useApolloClient();
 
-  const [logIn, {data: LogInData, loading: LogInLoading, error: LogInError}] = 
+  const [logIn, {data: logInData, loading: logInLoading, error: logInError}] = 
   useMutation<LogInData, LogInVariables>(LOG_IN, {
     onCompleted: data => {
       if(data && data.logIn){
@@ -59,7 +61,7 @@ export const Login = ({setViewer}: Props) => {
     }
   };
   
-  if (LogInLoading){
+  if (logInLoading){
     return(
       <Content className="log-in">
         <Spin size="large" tip="Logging you in ..."/>
@@ -67,12 +69,12 @@ export const Login = ({setViewer}: Props) => {
     )
   }
 
-  if(LogInData && LogInData.logIn) {
-      const {id : viewerId} = LogInData.logIn;
+  if(logInData && logInData.logIn) {
+      const {id : viewerId} = logInData.logIn;
       return <Navigate to={`/user/${viewerId}`}/>
   }
-
-  const logInErrorBannerElement = LogInError? 
+  
+  const logInErrorBannerElement = logInError? 
     <ErrorBanner description="We weren't able to log you in. Please try again soon."/>
     :null
 
