@@ -18,17 +18,17 @@ export const MenuItems = ({viewer, setViewer} : Props) => {
     onCompleted: data => {
         if (data && data.logOut){
           setViewer(data.logOut)
-          displaySuccessNotification('You were successfuly log out')
+          sessionStorage.removeItem("token");
+          displaySuccessNotification('You were successfuly log out');
         }
     },
     onError: () => {
-          displayErrorMessage("Sorry! We weren't able to log you out. Please try again later!")
+          displayErrorMessage("Sorry! We weren't able to log you out. Please try again later!");
     }
   });
 
   const handleLogOut = () => {
     logOut();
-    console.log('click')
   }
 
   const itemsSignIn = [

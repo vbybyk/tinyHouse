@@ -17,7 +17,10 @@ const root = ReactDOM.createRoot(
 
 const client = new ApolloClient({
   uri: '/api',
-  cache: new InMemoryCache()
+  cache: new InMemoryCache(),
+  headers: {
+    "X-CSRF-TOKEN": sessionStorage.getItem("token") || "",
+}
 });
 
 const initialViewer: Viewer = {
@@ -35,6 +38,12 @@ const App = () => {
     onCompleted: data => {
       if (data && data.logIn) {
         setViewer(data.logIn);
+        
+        if (data.logIn.token) {
+          sessionStorage.setItem("token", data.logIn.token);
+        } else {
+          sessionStorage.removeItem("token");
+        }
       }
     }
   });
@@ -46,6 +55,7 @@ const App = () => {
   }, []);
 
   if (!viewer.didRequest && !error) {
+
     return(
         <Layout className="app-skeleton">
               <AppHeaderSkeleton />
