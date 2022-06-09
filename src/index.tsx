@@ -82,8 +82,8 @@ const App = () => {
             <Route path="/host" element={<Host/>}/>
             <Route path="/listing/:id" element={<Listing/>}/>
             <Route path="/listings/:location" element={<Listings/>}/>
-            <Route path="/user/:id" element={<User/>}/>
             <Route path="/login" element={<Login setViewer={setViewer}/>}/>
+            <Route path="/user/:id" element={<User viewer={viewer}/>}/>
             <Route path="*" element={<NotFound/>}/>
         </Routes>
         </Layout>
@@ -96,7 +96,7 @@ root.render(
     <ApolloProvider client={client}>
       <App/>
     </ApolloProvider>
-  </React.StrictMode>
+ </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

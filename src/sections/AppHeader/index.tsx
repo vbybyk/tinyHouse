@@ -2,7 +2,7 @@ import { Layout} from "antd";
 import { Link } from "react-router-dom";
 import { MenuItems } from "./components/MenuItems";
 import { Viewer } from "../../lib/types";
-import HeaderLogo from './assets/tinyhouse-logo.png'
+import HeaderLogo from './assets/logo.png';
 
 const { Header } = Layout;
 
