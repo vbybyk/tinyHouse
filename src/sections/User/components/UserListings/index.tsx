@@ -14,6 +14,7 @@ const {Title, Paragraph} = Typography
 export const UserListings = ({ userListings, listingsPage, limit, setListingsPage}: Props) => {
 
     const {total, result} = userListings;
+
     const userListingsList = (
       <List 
           grid={{
@@ -29,17 +30,16 @@ export const UserListings = ({ userListings, listingsPage, limit, setListingsPag
             current: listingsPage,
             total,
             defaultPageSize: limit,
-            hideOnSinglePage: true,
+            // hideOnSinglePage: true,
             showLessItems: true,
             onChange: (page: number) => setListingsPage(page)
-          }
-            
-          }
+          }}
           renderItem={item => (
-            <List.Item>
+            <List.Item className="listing-card-item">
                <ListingCard listing={item}/>
             </List.Item>
-      )}/>
+        )}
+      />
     )
   
   return(
