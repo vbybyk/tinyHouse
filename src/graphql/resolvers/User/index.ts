@@ -1,5 +1,5 @@
-import { IResolvers } from "@graphql-tools/utils";
 import { Request } from "express";
+import { IResolvers } from "@graphql-tools/utils";
 import { Database, User } from "../../../lib/types";
 import { authorize } from "../../../lib/utils";
 import {
@@ -68,7 +68,7 @@ export const userResolvers: IResolvers = {
         cursor = cursor.skip(page > 0 ? (page - 1) * limit : 0);
         cursor = cursor.limit(limit);
 
-        data.total = await cursor.count();
+        data.total = await db.bookings.countDocuments({ _id: { $in: user.bookings } });
         data.result = await cursor.toArray();
 
         return data;
@@ -94,7 +94,11 @@ export const userResolvers: IResolvers = {
         cursor = cursor.skip(page > 0 ? (page - 1) * limit : 0);
         cursor = cursor.limit(limit);
 
-        data.total = await cursor.count();
+        // data.total = await db.listings.find({
+        //   _id: { $in: user.listings }
+        // }).count();
+       
+        data.total = await db.listings.countDocuments({ _id: { $in: user.listings } })
         data.result = await cursor.toArray();
 
         return data;
