@@ -2,6 +2,7 @@ import { Typography, List } from "antd";
 import { ListingCard } from "../../../../lib/components";
 import { User } from "../../../../lib/graphql/queries/User/__generated__/User";
 
+
 interface Props {
   userListings: User["user"] ["listings"],
   listingsPage: number,
