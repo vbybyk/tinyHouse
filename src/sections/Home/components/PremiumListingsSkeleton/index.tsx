@@ -7,7 +7,7 @@ export const PremiumListingsSkeleton = () => {
 
   return(
     <div className="home-listings-skeleton">
-      {/* <Skeleton paragraph={{ rows: 0 }} /> */}
+      <Skeleton paragraph={{ rows: 0 }} />
       <List
         grid={{
           gutter: 8,
