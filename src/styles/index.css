@@ -87,7 +87,7 @@
   z-index: 99;
 }
 .listing-card-item{
-  width: 300px;
+  width: 350px;
   height: 195px;
 }
 .listing-card__cover-img {
@@ -197,8 +197,11 @@
   color: #1d226c;
   display: inline-block;
 }
-.home-listings-skeleton {
+/* .home-listings-skeleton {
   padding: 40px 0 20px;
+} */
+.home-listing-skeleton-item{
+  width: 350px;
 }
 .home-listings-skeleton__card {
   margin: 5px 0;

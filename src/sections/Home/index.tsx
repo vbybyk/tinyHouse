@@ -1,6 +1,7 @@
 import { useNavigate, Link } from "react-router-dom";
 import { Col, Row, Layout, Typography } from "antd";
 import { HomeHero } from "./components";
+import { PremiumListings } from "./components";
 
 import sanFransiscoImage from "./assets/san-fransisco.jpg";
 import cancunImage from "./assets/cancun.jpg";
@@ -19,6 +20,8 @@ export const Home = () => {
     }
   }
 
+ 
+
   return(
     <Content className="home">
         <HomeHero onSearch={onSearch}/>
@@ -31,6 +34,11 @@ export const Home = () => {
             Popular listings in the United States
           </Link>
         </div>
+
+        <div className="home-listings">
+            <PremiumListings/>
+        </div>
+
         <div className="home__listings">
           <Title level={4} className="home__listings-title">
             Listings of any kind
