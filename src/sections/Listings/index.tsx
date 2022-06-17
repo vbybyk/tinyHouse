@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@apollo/client";
-import { Typography, List, Layout } from "antd";
-import { ListingCard } from "../../lib/components";
-import { ListingsFilters, ListingsPagination } from "./components";
+import { Typography, List, Layout, Affix } from "antd";
+import { ListingCard, ErrorBanner } from "../../lib/components";
+import { ListingsFilters, ListingsPagination, ListingsSkeleton } from "./components";
 import { LISTINGS } from "../../lib/graphql/queries";
 import { ListingsFilter } from "../../lib/graphql/globalTypes";
 import { Listings as ListingsData, ListingsVariables } from "../../lib/graphql/queries/Listings/__generated__/Listings";
@@ -25,7 +25,7 @@ export const Listings = () => {
 
   const { location } = useParams<MatchParams>() as MatchParams;
 
-  const { data, loading } = useQuery<ListingsData, ListingsVariables>(LISTINGS, {
+  const { data, loading, error } = useQuery<ListingsData, ListingsVariables>(LISTINGS, {
       variables: {
         location,
         filter: listingsFilter,
@@ -34,40 +34,56 @@ export const Listings = () => {
       }
   })
 
+  if (loading) {
+    return (
+      <Content className="listings">
+        <ListingsSkeleton />
+      </Content>
+    );
+  }
+
+  if (error) {
+    return (
+      <Content className="listings">
+        <ErrorBanner
+          description={`
+            We either couldn't find anything matching your search or have encountered an error.
+            If you're searching for a unique location, try searching again with more common keywords.
+          `}
+        />
+        <ListingsSkeleton />
+      </Content>
+    );
+  }
+
   const listings = data?  data.listings : null;
   const listingsRegion = listings ? listings.region : null;
 
 
-  const LIMIT = 8
+  const LIMIT = 8;
 
   const listingsSectionElement = listings && listings.result.length ? 
       <div>
-        <ListingsPagination 
-          total={listings.total}
-          page={listingsPage}
-          limit={LIMIT}
-          setPage={setListingsPage}/>
-        <ListingsFilters filter={listingsFilter} setFilter={setListingsFilter}/>
+        <Affix offsetTop={64}>
+          <ListingsPagination 
+            total={listings.total}
+            page={listingsPage}
+            limit={LIMIT}
+            setPage={setListingsPage}/>
+          <ListingsFilters filter={listingsFilter} setFilter={setListingsFilter}/>
+        </Affix>
         <List 
+            
             grid={{
+              column: 4,
               gutter: 8,
               xs: 1,
               sm: 2,
               lg: 4
             }}
             dataSource={listings.result}
-            // pagination={{
-            //   position: "top",
-            //   current: listingsPage,
-            //   total: listings.total,
-            //   defaultPageSize: LIMIT,
-            //   // hideOnSinglePage: true,
-            //   showLessItems: true,
-            //   onChange: (page: number) => setListingsPage(page),
-            //   className: "listings-pagination"
-            // }}
             renderItem={item => (
-              <List.Item className="listing-card-item">
+              <List.Item >
                 <ListingCard listing={item}/>
               </List.Item>
           )}
@@ -85,16 +101,6 @@ export const Listings = () => {
       </div>
     );
     
-
-    // const renderListingsSection = () => {
-    //   if(loading){
-    //     return <PremiumListingsSkeleton/>
-    //   } 
-    //   if(result){
-    //     return premiumListingsList
-    //   }
-    //   return null
-    // }
 
   const listingsRegionElement = listingsRegion ? (
     <Title level={3} className="listings__title">

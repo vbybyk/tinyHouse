@@ -14,7 +14,7 @@ export const ListingsPagination = ({ total, page, limit, setPage }: Props) => {
       current={page}
       total={total}
       defaultPageSize={limit}
-      hideOnSinglePage
+      // hideOnSinglePage
       showLessItems
       onChange={(page: number) => setPage(page)}
       className="listings-pagination"
