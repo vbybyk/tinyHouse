@@ -77,7 +77,7 @@ export const listingResolvers: IResolvers = {
           cursor = cursor.skip(page > 0 ? (page - 1) * limit : 0);
           cursor = cursor.limit(limit);
 
-          data.total = await db.listings.countDocuments({})
+          data.total = await db.listings.countDocuments(query)
           data.result = await cursor.toArray();
 
           return data;
