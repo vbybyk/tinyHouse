@@ -34,6 +34,7 @@ export const PremiumListings = () => {
   const premiumListingsList = (
       <List 
           grid={{
+            column: 4,
             gutter: 8,
             xs: 1,
             sm: 2,
@@ -51,7 +52,7 @@ export const PremiumListings = () => {
             onChange: (page: number) => setListingsPage(page)
           }}
           renderItem={item => (
-            <List.Item className="listing-card-item">
+            <List.Item >
                <ListingCard listing={item}/>
             </List.Item>
         )}
