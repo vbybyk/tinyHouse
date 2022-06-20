@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useParams, Link } from "react-router-dom";
 import { useQuery } from "@apollo/client";
 import { Typography, List, Layout, Affix } from "antd";
@@ -15,7 +15,7 @@ type MatchParams = {
   location: string
 }
 
-const PAGE_LIMIT = 8;
+const PAGE_LIMIT = 4;
 const FILTER = ListingsFilter.PRICE_HIGH_TO_LOW
 
 export const Listings = () => {
@@ -25,14 +25,22 @@ export const Listings = () => {
 
   const { location } = useParams<MatchParams>() as MatchParams;
 
+  const locationRef = useRef(location); // to skip second query when page rerenders
+
   const { data, loading, error } = useQuery<ListingsData, ListingsVariables>(LISTINGS, {
-      variables: {
+    skip: locationRef.current !== location && listingsPage !== 1,  
+    variables: {
         location,
         filter: listingsFilter,
         limit: PAGE_LIMIT,
         page: listingsPage
       }
   })
+
+  useEffect(() => {
+      setListingsPage(1);
+      locationRef.current = location;
+  }, [location])
 
   if (loading) {
     return (
@@ -60,7 +68,7 @@ export const Listings = () => {
   const listingsRegion = listings ? listings.region : null;
 
 
-  const LIMIT = 8;
+  // const LIMIT = 8;
 
   const listingsSectionElement = listings && listings.result.length ? 
       <div>
@@ -68,7 +76,7 @@ export const Listings = () => {
           <ListingsPagination 
             total={listings.total}
             page={listingsPage}
-            limit={LIMIT}
+            limit={PAGE_LIMIT}
             setPage={setListingsPage}/>
           <ListingsFilters filter={listingsFilter} setFilter={setListingsFilter}/>
         </Affix>

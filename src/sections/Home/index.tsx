@@ -12,6 +12,7 @@ const { Paragraph, Title } = Typography;
 export const Home = () => {
 
   const navigate = useNavigate();
+  
   const onSearch = (value: string) => {
     const trimmedValue = value.trim();
 
