@@ -71,6 +71,9 @@ export const typeDefs = gql`
     code: String!
   }
 
+  input ConnectStripeInput {
+    code: String!
+  }
 
   type Query {
     authUrl: String!
@@ -83,8 +86,11 @@ export const typeDefs = gql`
       page: Int!
     ): Listings!
   }
+  
   type Mutation {
-    logIn(input : LogInInput): Viewer!,
+    logIn(input : LogInInput): Viewer!
     logOut: Viewer!
+    connectStripe(input: ConnectStripeInput!): Viewer!
+    disconnectStripe: Viewer!
   }
 `;
