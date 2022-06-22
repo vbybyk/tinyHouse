@@ -1,30 +1,71 @@
-import { Avatar, Card, Divider, Typography, Button } from "antd";
-import {User as UserData} from '../../../../lib/graphql/queries/User/__generated__/User'
+import { useMutation } from "@apollo/client";
+import { Avatar, Card, Divider, Typography, Button, Tag } from "antd";
+import { formatListingPrice, displaySuccessNotification, displayErrorMessage } from "../../../../lib/utils";
+import { DISCONNECT_STRIPE } from "../../../../lib/graphql/mutations";
+import { DisconnectStripe as DisconnectStripeData } from "../../../../lib/graphql/mutations/DisconnectStripe/__generated__/DisconnectStripe";
+import { User as UserData } from '../../../../lib/graphql/queries/User/__generated__/User'
 import { Viewer } from "../../../../lib/types";
 
 interface Props {
   user: UserData["user"]  //Look-up types (or otherwise labeled as indexed access types) appear 
                             //very similar to how elements can be accessed in an object.
   viewer: Viewer
+  setViewer: (viewer: Viewer) => void
+  handleUserRefetch: () => void
 }
 
 const {Paragraph, Text, Title} = Typography;
 
 const stripeAuthUrl = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_S_CLIENT_ID}&scope=read_write`;
 
-export const UserProfile = ({user, viewer} : Props) => {
+export const UserProfile = ({user, viewer, setViewer, handleUserRefetch} : Props) => {
+
+  const [disconnectStripe, { loading }] = useMutation<DisconnectStripeData>(DISCONNECT_STRIPE, {
+    onCompleted: data => {
+      if(data && data.disconnectStripe){
+        setViewer({...viewer, hasWallet: data.disconnectStripe.hasWallet});
+        displaySuccessNotification("You've successfully disconnected from Stripe!",
+            "You'll have to reconnect with Stripe to continue to create listings."
+          );
+        handleUserRefetch();
+      }
+    },
+    onError: () => {
+        displayErrorMessage(
+          "Sorry! We weren't able to disconnect you from Stripe. Please try again later!"
+        );
+      }
+  })
 
   const redirectToStripe = () => {
     window.location.href = stripeAuthUrl;
   };
 
-  const userIdMatch = user.id === viewer.id;
-  const additionalProfileElement = userIdMatch? (
-    <> 
-      <Divider />
-      <div className="user-profile__details">
-        <Title level={4}>Additional Details</Title>
-        <Paragraph>
+  const additionalDetails = user.hasWallet? (
+    <>
+      <Paragraph>
+        <Tag color="green">Stripe Registered</Tag>
+      </Paragraph>
+      <Paragraph>
+        Income Earned:{" "}
+        <Text strong>{user.income ? formatListingPrice(user.income) : `$0`}</Text>
+      </Paragraph>
+      <Button 
+        type="primary" 
+        className="user-profile__details-cta"
+        loading={loading}
+        onClick={() => disconnectStripe()}>
+        Disconnect Stripe
+      </Button>
+      <Paragraph type="secondary">
+        By disconnecting, you won't be able to receive{" "}
+        <Text strong>any further payments</Text>. This will prevent users from booking
+        listings that you might have already created.
+      </Paragraph>
+    </>
+  ): (
+    <>
+    <Paragraph>
           Interested in becoming a TinyHouse host? Register with your Stripe account!
         </Paragraph>
         <Button 
@@ -44,6 +85,16 @@ export const UserProfile = ({user, viewer} : Props) => {
           </a>{" "}
           to help transfer your earnings in a secure and truster manner.
         </Paragraph>
+    </>
+  )
+
+  const userIdMatch = user.id === viewer.id;
+  const additionalProfileElement = userIdMatch? (
+    <> 
+      <Divider />
+      <div className="user-profile__details">
+        <Title level={4}>Additional Details</Title>
+        {additionalDetails}
       </div>
     </>
   ) : null

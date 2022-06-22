@@ -10,7 +10,8 @@ import { ErrorBanner, PageSkeleton } from "../../lib/components"
 import { UserListings, UserBookings, UserProfile } from './components'
 
 interface Props {
-  viewer: Viewer
+  viewer: Viewer,
+  setViewer: (viewer: Viewer) => void
 }
 
 type MatchParams = {
@@ -19,14 +20,14 @@ type MatchParams = {
 
 const PAGE_LIMIT = 4
 
-export const User = ({viewer} : Props) => {
+export const User = ({viewer, setViewer} : Props) => {
 
   const [listingsPage, setListingsPage] = useState(1);
   const [bookingsPage, setBookingsPage] = useState(1);
 
   const { id }  = useParams<MatchParams>() as MatchParams;
 
-  const {data, loading, error} = useQuery<UserData, UserVariables>(USER, {
+  const {data, loading, error, refetch} = useQuery<UserData, UserVariables>(USER, {
      variables: {
        id,
        listingsPage,
@@ -34,6 +35,10 @@ export const User = ({viewer} : Props) => {
        limit: PAGE_LIMIT
      }
   });
+
+  const handleUserRefetch = async () => {
+    await refetch();
+  }
 
   if (loading) {
     return (
@@ -53,7 +58,12 @@ export const User = ({viewer} : Props) => {
   }
 
   const user = data? data.user : null;
-  const userProfileElement = user? <UserProfile user={user} viewer={viewer}/> : null;
+  const userProfileElement = user? 
+  <UserProfile 
+    user={user} 
+    viewer={viewer} 
+    setViewer={setViewer}
+    handleUserRefetch={handleUserRefetch}/> : null;
 
   const userListings = user? user.listings : null;
   const userBookings = user? user.bookings : null;

@@ -94,7 +94,7 @@ const App = () => {
             <Route path="/listings/" element={<Listings/>}/>
             <Route path="/login" element={<Login setViewer={setViewer}/>}/>
             <Route path="/stripe" element={<Stripe viewer={viewer} setViewer={setViewer} />}/>
-            <Route path="/user/:id" element={<User viewer={viewer}/>}/>
+            <Route path="/user/:id" element={<User viewer={viewer} setViewer={setViewer}/>}/>
             <Route path="*" element={<NotFound/>}/>
         </Routes>
         </Layout>
