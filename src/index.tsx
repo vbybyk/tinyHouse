@@ -1,7 +1,16 @@
 import React, { useState, useEffect, useRef } from 'react';
 import ReactDOM from 'react-dom/client';
 import {BrowserRouter as Router, Route, Routes} from 'react-router-dom';
-import {AppHeader, Listings, Home, Host, Listing, User, Login, NotFound} from './sections'; 
+import {
+  AppHeader, 
+  Home, 
+  Host, 
+  Listing, 
+  Listings,
+  Login,
+  Stripe,
+  User,  
+  NotFound} from './sections'; 
 import {ApolloClient, InMemoryCache, ApolloProvider, useMutation} from "@apollo/client";
 import { LOG_IN } from './lib/graphql/mutations';
 import { LogIn as LogInData, LogInVariables } from './lib/graphql/mutations/LogIn/__generated__/LogIn';
@@ -84,6 +93,7 @@ const App = () => {
             <Route path="/listings/:location" element={<Listings/>}/>
             <Route path="/listings/" element={<Listings/>}/>
             <Route path="/login" element={<Login setViewer={setViewer}/>}/>
+            <Route path="/stripe" element={<Stripe viewer={viewer} setViewer={setViewer} />}/>
             <Route path="/user/:id" element={<User viewer={viewer}/>}/>
             <Route path="*" element={<NotFound/>}/>
         </Routes>
@@ -93,11 +103,11 @@ const App = () => {
 };
 
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <ApolloProvider client={client}>
       <App/>
     </ApolloProvider>
- </React.StrictMode>
+//  </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

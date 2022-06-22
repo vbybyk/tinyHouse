@@ -10,7 +10,13 @@ interface Props {
 
 const {Paragraph, Text, Title} = Typography;
 
+const stripeAuthUrl = `https://connect.stripe.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_S_CLIENT_ID}&scope=read_write`;
+
 export const UserProfile = ({user, viewer} : Props) => {
+
+  const redirectToStripe = () => {
+    window.location.href = stripeAuthUrl;
+  };
 
   const userIdMatch = user.id === viewer.id;
   const additionalProfileElement = userIdMatch? (
@@ -21,7 +27,10 @@ export const UserProfile = ({user, viewer} : Props) => {
         <Paragraph>
           Interested in becoming a TinyHouse host? Register with your Stripe account!
         </Paragraph>
-        <Button type="primary" className="user-profile__details-cta">
+        <Button 
+          type="primary" 
+          className="user-profile__details-cta"
+          onClick={redirectToStripe}>
           Connect with Stripe
         </Button>
         <Paragraph type="secondary">

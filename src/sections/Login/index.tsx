@@ -9,7 +9,7 @@ import { LogIn as LogInData, LogInVariables } from "../../lib/graphql/mutations/
 import { AuthUrl as AuthUrlData } from "../../lib/graphql/queries/AuthUrl/__generated__/AuthUrl";
 import { displaySuccessNotification, displayErrorMessage } from "../../lib/utils";
 import { Viewer } from "../../lib/types";
-// import googleLogo from './assets/google_logo.jpg'
+import googleLogo from './assets/google_logo.jpg'
 
 interface Props {
   setViewer: (viewer: Viewer) => void;
@@ -96,7 +96,7 @@ export const Login = ({setViewer}: Props) => {
         </div>
         <button type="button" className="log-in-card__google-button" onClick={handleAuthorize}>
           <img
-            src="/assets/google_logo.jpg"
+            src={googleLogo}
             alt="Google Logo"
             className="log-in-card__google-button-logo"
           />
