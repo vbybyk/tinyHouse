@@ -1,8 +1,6 @@
-import stripe from "stripe";
+import stripe from 'stripe';
 
-const client = new stripe(`${process.env.S_SECRET_KEY}`, {
-  apiVersion: '2020-08-27',
-});
+const client = new stripe(`${process.env.S_SECRET_KEY}`);
 
 export const Stripe = {
   connect: async (code: string) => {

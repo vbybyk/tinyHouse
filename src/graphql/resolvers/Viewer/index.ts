@@ -1,9 +1,9 @@
 import crypto from "crypto";
 import { Request, Response } from "express";
 import { IResolvers } from "@graphql-tools/utils";
-import { Viewer, Database, User } from "../../../lib/types";
-import { authorize } from "../../../lib/utils";
 import { Google, Stripe } from "../../../lib/api";
+import { Viewer, Database, User } from "../../../lib/types";
+import { authorize, authorizeStripe } from "../../../lib/utils";
 import { LogInArgs, ConnectStripeArgs } from "./types";
 
 
@@ -12,28 +12,6 @@ const cookieOptions = {
   sameSite: true,
   signed: true,
   secure: process.env.NODE_ENV === "development" ? false : true
-};
-
-const logInViaCookie = async (
-  token: string,
-  db: Database,
-  req: Request,
-  res: Response
-): Promise<User | undefined> => {
-  const updateRes = await db.users.findOneAndUpdate(
-    { _id: req.signedCookies.viewer },
-    { $set: { token } },
-    { returnDocument: 'after' }
-  );
-
-  const viewer = updateRes.value;
-
-  if (!viewer) {
-    res.clearCookie("viewer", cookieOptions);
-    return undefined;
-  }
-
-  return viewer;
 };
 
 const logInViaGoogle = async (
@@ -121,6 +99,28 @@ const logInViaGoogle = async (
   return viewer;
 };
 
+const logInViaCookie = async (
+  token: string,
+  db: Database,
+  req: Request,
+  res: Response
+): Promise<User | undefined> => {
+  const updateRes = await db.users.findOneAndUpdate(
+    { _id: req.signedCookies.viewer },
+    { $set: { token } },
+    { returnDocument: 'after' }
+  );
+
+  const viewer = updateRes.value;
+
+  if (!viewer) {
+    res.clearCookie("viewer", cookieOptions);
+    return undefined;
+  }
+
+  return viewer;
+};
+
 export const viewerResolver: IResolvers = {
     Query: {
       authUrl: (): string => {
@@ -176,12 +176,14 @@ export const viewerResolver: IResolvers = {
         { input }: ConnectStripeArgs,
         { db, req }: { db: Database; req: Request }
       ): Promise<Viewer> => {
+
         try {
           const { code } = input;
-
-          let viewer = await authorize(db, req);
+          
+          let viewer = await authorizeStripe(db, req);
+        
           if (!viewer) {
-            throw new Error("viewer cannot be found");
+            throw new Error(`viewer cannot be found viewer = ${viewer}`);
           }
 
           const wallet = await Stripe.connect(code);
