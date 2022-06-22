@@ -220,7 +220,7 @@ export const viewerResolver: IResolvers = {
         { db, req }: { db: Database; req: Request }
       ): Promise<Viewer> => {
         try {
-          let viewer = await authorize(db, req);
+          let viewer = await authorizeStripe(db, req);
           if (!viewer) {
             throw new Error("viewer cannot be found");
           }
