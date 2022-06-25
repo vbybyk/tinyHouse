@@ -15,7 +15,7 @@ type MatchParams = {
   location: string
 }
 
-const PAGE_LIMIT = 4;
+const PAGE_LIMIT = 8;
 const FILTER = ListingsFilter.PRICE_HIGH_TO_LOW
 
 export const Listings = () => {

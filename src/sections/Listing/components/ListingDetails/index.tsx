@@ -22,7 +22,7 @@ export const ListingDetails = ({listing} : Props) => {
         </div>
         <div className="listing-details__information">
             <Paragraph type="secondary" ellipsis className="listing-details__city-address">
-                <Link to={`/listing/${city}`}>
+                <Link to={`/listings/${city}`}>
                   <EnvironmentOutlined style={{color: `${iconColor}`}}/>
                   {city}
                 </Link>
