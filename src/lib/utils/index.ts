@@ -20,3 +20,13 @@ export const authorizeStripe = async (db: Database, req: Request): Promise<User 
 
   return viewer;
 };
+
+export const authorizeMutation = async (db: Database, req: Request): Promise<User | null> => {
+  // const token = await req.get("X-CSRF-TOKEN");
+  const viewer = await db.users.findOne({
+    _id: req.signedCookies.viewer,
+    // token
+  });
+
+  return viewer;
+};

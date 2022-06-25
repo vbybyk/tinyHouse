@@ -2,7 +2,7 @@ import { Request } from "express";
 import { IResolvers } from "@graphql-tools/utils"; 
 import { ObjectId } from "mongodb";
 import { Database, ListingType, Listing, User} from "../../../lib/types";
-import { authorize } from "../../../lib/utils";
+import { authorize, authorizeMutation } from "../../../lib/utils";
 import { Google } from "../../../lib/api";
 import { ListingArgs, 
         ListingBookingsArgs, 
@@ -116,7 +116,7 @@ export const listingResolvers: IResolvers = {
 
         verifyHostListingInput(input);
 
-        const viewer = await authorize(db, req);
+        const viewer = await authorizeMutation(db, req);
         if(!viewer){
           throw new Error("viewer cannot be found")
         }
