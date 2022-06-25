@@ -73,12 +73,14 @@ export const Listings = () => {
   const listingsSectionElement = listings && listings.result.length ? 
       <div>
         <Affix offsetTop={64}>
-          <ListingsPagination 
-            total={listings.total}
-            page={listingsPage}
-            limit={PAGE_LIMIT}
-            setPage={setListingsPage}/>
-          <ListingsFilters filter={listingsFilter} setFilter={setListingsFilter}/>
+          <div>
+            <ListingsPagination 
+              total={listings.total}
+              page={listingsPage}
+              limit={PAGE_LIMIT}
+              setPage={setListingsPage}/>
+            <ListingsFilters filter={listingsFilter} setFilter={setListingsFilter}/>
+          </div>
         </Affix>
         <List 
             
