@@ -3,7 +3,7 @@ import { IResolvers } from "@graphql-tools/utils";
 import { ObjectId } from "mongodb";
 import { Database, ListingType, Listing, User} from "../../../lib/types";
 import { authorize, authorizeMutation } from "../../../lib/utils";
-import { Google } from "../../../lib/api";
+import { Google, Cloudinary } from "../../../lib/api";
 import { ListingArgs, 
         ListingBookingsArgs, 
         ListingBookingsData, 
@@ -126,9 +126,12 @@ export const listingResolvers: IResolvers = {
             throw new Error("invalid address input");
         }
 
+        const imageUrl = await Cloudinary.upload(input.image)
+
         const newResult = {
           _id: new ObjectId(),
           ...input,
+          image: imageUrl,
           bookings: [],
           bookingsIndex: {},
           country,
