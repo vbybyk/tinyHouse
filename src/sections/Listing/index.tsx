@@ -1,27 +1,41 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useQuery } from "@apollo/client";
 import { useParams } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 import { PageSkeleton, ErrorBanner } from "../../lib/components";
 import { Layout, Row, Col } from "antd";
 import { Moment} from "moment";
+import { Viewer } from "../../lib/types";
 import { LISTING } from "../../lib/graphql/queries";
 import { Listing as ListingData, ListingVariables } from "../../lib/graphql/queries/Listing/__generated__/Listing";
-import { ListingDetails, ListingBookings, ListingCreateBooking } from './components/'
+import { 
+    ListingDetails, 
+    ListingBookings, 
+    ListingCreateBooking,
+    ListingCreateBookingModal } from './components/'
 
 type MatchData = {
   id: string
+}
+
+interface Props {
+  viewer: Viewer
 }
 
 const { Content } = Layout;
 
 const PAGE_LIMIT = 3
 
-export const Listing = () => {
+export const Listing = ({viewer}: Props) => {
   
   const [bookingsPage, setBookingsPage] = useState(1);
   const [checkInDate, setCheckInDate] = useState<Moment | null>(null);
   const [checkOutDate, setCheckOutDate] = useState<Moment | null>(null);
+  const [modalVisible, setModalVisible] = useState(false)
   const { id } = useParams<MatchData>() as MatchData;
+
+  const stripePromise = useMemo(() => loadStripe(`${process.env.REACT_APP_S_PUBLISHABLE_KEY}`), []);
 
   const {data, loading, error} = useQuery<ListingData, ListingVariables>(LISTING, {
     variables: {
@@ -63,11 +77,25 @@ export const Listing = () => {
   const listingCreateBookingElement = listing? 
     <ListingCreateBooking 
         price={listing.price}
+        viewer={viewer}
+        host={listing.host}
+        bookingsIndex={listing.bookingsIndex}
         checkInDate={checkInDate}
         checkOutDate={checkOutDate}
         setCheckInDate={setCheckInDate}
         setCheckOutDate={setCheckOutDate}
+        setModalVisible={setModalVisible}
         /> : null;
+  
+  const listingCreateBookingModalElement = listing && checkInDate && checkOutDate? 
+  <Elements stripe={stripePromise}>
+    <ListingCreateBookingModal 
+    price={listing.price}
+    checkInDate={checkInDate}
+    checkOutDate={checkOutDate}
+    modalVisible={modalVisible}
+    setModalVisible={setModalVisible}/>
+  </Elements> : null
   
   return(
     <Content className="listings">
@@ -80,6 +108,7 @@ export const Listing = () => {
           {listingCreateBookingElement}
         </Col>
       </Row>
+      {listingCreateBookingModalElement}
     </Content>
   )
 }
