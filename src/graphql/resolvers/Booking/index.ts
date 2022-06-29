@@ -2,7 +2,7 @@ import { IResolvers } from "@graphql-tools/utils";
 import { Request } from "express";
 import { ObjectId } from "mongodb";
 import { Stripe } from "../../../lib/api";
-import { authorize } from "../../../lib/utils";
+import { authorizeMutation } from "../../../lib/utils";
 import { Booking, Database, Listing, BookingsIndex } from "../../../lib/types";
 import { CreateBookingArgs } from "./types";
 
@@ -50,7 +50,7 @@ export const bookingResolvers: IResolvers = {
       try {
         const { id, source, checkIn, checkOut } = input;
 
-        const viewer = await authorize(db, req);
+        const viewer = await authorizeMutation(db, req);
         if (!viewer) {
           throw new Error("viewer cannot be found");
         }
