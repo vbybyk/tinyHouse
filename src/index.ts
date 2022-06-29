@@ -1,4 +1,5 @@
 import express, {Application} from "express";
+import compression from "compression";
 import cookieParser from "cookie-parser";
 import { ApolloServer } from "apollo-server-express";
 import { connectDataBase } from "./database";
@@ -10,6 +11,10 @@ const mount = async (app: Application) => {
     const db = await connectDataBase();
 
     app.use(cookieParser(process.env.SECRET))
+    app.use(compression());
+
+    app.use(express.static(`${__dirname}/client`));
+    app.get("/*", (_req, res) => res.sendFile(`${__dirname}/client/index.html`));
 
     const server = new ApolloServer({
         typeDefs, 
