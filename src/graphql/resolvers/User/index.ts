@@ -1,7 +1,7 @@
 import { Request } from "express";
 import { IResolvers } from "@graphql-tools/utils";
 import { Database, User } from "../../../lib/types";
-import { authorize } from "../../../lib/utils";
+import { authorizeMutation } from "../../../lib/utils";
 import {
   UserArgs,
   UserBookingsArgs,
@@ -24,7 +24,7 @@ export const userResolvers: IResolvers = {
           throw new Error("user can't be found");
         }
 
-        const viewer = await authorize(db, req);
+        const viewer = await authorizeMutation(db, req);
 
         if (viewer && viewer._id === user._id) {
           user.authorized = true;
