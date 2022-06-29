@@ -54,7 +54,7 @@ export const Host = ({ viewer }: Props) => {
   };
 
   const onFinish = (values: any) => {
-    console.log('Success:', values);
+    
     const fullAddress = `${values.address}, ${values.city}, ${values.state}, ${values.postalCode}`;
 
     const input = {

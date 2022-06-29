@@ -29,7 +29,6 @@ export const Login = ({setViewer}: Props) => {
     onCompleted: data => {
       if(data && data.logIn && data.logIn.token){
         // debugger;
-      console.log(data.logIn)
        setViewer(data.logIn);
        sessionStorage.setItem("token", data.logIn.token);
        displaySuccessNotification("You've successfully logged in!");
@@ -41,7 +40,6 @@ export const Login = ({setViewer}: Props) => {
   
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
-    console.log(code);
     if(code){
       logInRef.current({
         variables: {

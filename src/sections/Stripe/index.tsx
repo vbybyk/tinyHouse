@@ -24,9 +24,7 @@ export const Stripe = ({ viewer, setViewer }: Props) => {
   const [connectStripe, { data, loading, error }] = useMutation<ConnectStripeData,ConnectStripeVariables
   >(CONNECT_STRIPE, {
     onCompleted: data => {
-      console.log('completed mutation ')
-      console.log(data)
-      console.log(data.connectStripe)
+      
       if (data && data.connectStripe) {
         setViewer({ ...viewer, hasWallet: data.connectStripe.hasWallet });
         displaySuccessNotification(
@@ -36,21 +34,18 @@ export const Stripe = ({ viewer, setViewer }: Props) => {
       }
     }
   });
-  console.log(data)
-  console.log(error)
   
   const connectStripeRef = useRef(connectStripe);
 
   useEffect(() => {
     const code = new URL(window.location.href).searchParams.get("code");
-    console.log(code)
+  
     if (code) {
       connectStripeRef.current({
         variables: {
           input: { code }
         }
       });
-      console.log('code sent')
     } else {
       navigate("/login", {replace:true});
     }

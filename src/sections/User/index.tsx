@@ -58,6 +58,7 @@ export const User = ({viewer, setViewer} : Props) => {
   }
 
   const user = data? data.user : null;
+  
   const userProfileElement = user? 
   <UserProfile 
     user={user} 

@@ -55,9 +55,9 @@ export const MenuItems = ({viewer, setViewer} : Props) => {
                 </Link>,
         key: '/user' },
       { label: 
-                  <div onClick={handleLogOut}>
+                  <Link to={'/'} onClick={handleLogOut}>
                     <LogoutOutlined/> Log out
-                  </div>,
+                  </Link>,
                
         key: '/logout' }
   ],
