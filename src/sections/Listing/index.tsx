@@ -37,13 +37,23 @@ export const Listing = ({viewer}: Props) => {
 
   const stripePromise = useMemo(() => loadStripe(`${process.env.REACT_APP_S_PUBLISHABLE_KEY}`), []);
 
-  const {data, loading, error} = useQuery<ListingData, ListingVariables>(LISTING, {
+  const {data, loading, error, refetch} = useQuery<ListingData, ListingVariables>(LISTING, {
     variables: {
       id,
       bookingsPage,
       limit: PAGE_LIMIT
     }
   })
+
+  const clearBookingData = () => {
+    setModalVisible(false);
+    setCheckInDate(null);
+    setCheckOutDate(null);
+  };
+
+  const handleListingRefetch = async () => {
+    await refetch();
+  };
 
   if(loading){
     <Content className="listing">
@@ -89,12 +99,15 @@ export const Listing = ({viewer}: Props) => {
   
   const listingCreateBookingModalElement = listing && checkInDate && checkOutDate? 
   <Elements stripe={stripePromise}>
-    <ListingCreateBookingModal 
+    <ListingCreateBookingModal
+    id={listing.id} 
     price={listing.price}
     checkInDate={checkInDate}
     checkOutDate={checkOutDate}
     modalVisible={modalVisible}
-    setModalVisible={setModalVisible}/>
+    setModalVisible={setModalVisible}
+    clearBookingData={clearBookingData}
+    handleListingRefetch={handleListingRefetch}/>
   </Elements> : null
   
   return(
